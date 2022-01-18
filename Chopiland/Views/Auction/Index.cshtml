@@ -1,0 +1,120 @@
+﻿@model AuctionCPViewModel
+@using Chopiland.Code
+@using Data
+@using Services
+@inject IAuctionService auctionService
+@{
+    ViewData["Title"] = "Auctions";
+}
+
+<head>
+    <!-- Icon css link -->
+    <link href="~/templates/persuit/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/templates/persuit/vendors/line-icon/css/simple-line-icons.css" rel="stylesheet">
+    <link href="~/templates/persuit/vendors/elegant-icon/style.css" rel="stylesheet">
+    <link href="~/templates/persuit/css/style.css" rel="stylesheet">
+    <link href="~/templates/persuit/css/responsive.css" rel="stylesheet">
+</head>
+
+<section class="categories_product_main p_80">
+    <div class="container">
+        <form asp-controller="Auction" asp-action="Index" method="get">
+            <div class="row">
+                <div class="flex-w flex-l-m p-b-10 col-md-4 col-lg-4">
+                    <div class="size-204 respon6-next">
+                        <div class="rs1-select2 bor8 bg0">
+                            <select asp-for="CategoryId" asp-items=Model.Categories class="js-select2">
+                                <option value="">All Categories</option>
+                            </select>
+                            <div class="dropDownSelect2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-w flex-l-m p-b-10 col-md-4 col-lg-4">
+                    <div class="size-204 respon6-next">
+                        <div class="rs1-select2 bor8 bg0">
+                            <select asp-for="ProductID" asp-items=Model.Products class="js-select2">
+                                <option value="">All Products</option>
+                            </select>
+                            <div class="dropDownSelect2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-w flex-c-m m-tb-10 col-md-3 col-lg-3">
+                    <button class="flex-c-m stext-106 cl6 size-104 bor4 hov-btn3 trans-04 m-r-8 m-tb-4" type="submit">
+                        <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+                        Filter
+                    </button>
+
+                    <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
+                        <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+                        <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                        Search
+                    </div>
+                </div>
+                <div class="flex-w flex-l-m m-tb-10 col-md-2 col-lg-1">
+                    <button class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4" asp-area="" asp-controller="Auction" asp-action="AddAuction">
+                        <i class="icon-plus cl2 m-r-6 fs-15 trans-04 fa fa-plus-circle"></i>
+                        Create
+                    </button>
+                </div>
+                <div class="dis-none panel-search w-full p-t-10 p-b-15">
+                    <div class="bor8 dis-flex p-l-15">
+                        <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+                            <i class="zmdi zmdi-search"></i>
+                        </button>
+                        <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" asp-for="SearchString" placeholder="Search">
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="categories_main_inner">
+            <div class="row row_disable">
+                <div class=" float-md-right">
+                    <div class="c_product_grid_details ">
+                        @foreach (var item in Model.items)
+                        {
+                            <div class="c_product_item">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="c_product_img">
+                                            <img class="img-fluid" src="@Url.Content(item.ImageUrl)" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-md-6">
+                                        <div class="c_product_text">
+                                            <h4>@item.AnouncementName</h4>                                           
+                                            @if (@item.LastBid > 0)
+                                            {                                                
+                                                <h5>Actual Price : $@item.LastBid</h5>
+                                                <h3>Initial Price : $@item.InitialPrice</h3>
+                                            }
+                                            else
+                                            {
+                                                <h5>Initial Price : $@item.InitialPrice</h5>
+                                            }
+                                            <h6>Available Until<span> @item.FinalDate</span></h6>
+                                            <p>@item.Description</p>
+                                            <div class="c_product_btn">
+                                                <a class="btn btn-dark"  asp-controller="Auction" asp-action="Bid" asp-route-id="@item.Id"><i class="icon_wallet"></i> Bid</a>
+                                                @if (await AuthorizationService.AuthorizeAsync(User, auctionService.GetAuction(item.Id), Operations.Update))
+                                                {
+                                                    <a id="deleteAuctionModal" data-toggle="modal" asp-action="DeleteAuction" asp-route-id="@item.Id" data-target="#myModal" class="btn btn-danger">
+                                                        <i class="icon_trash"></i> Delete
+                                                    </a>
+                                                }
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</section>
+@Html.Partial("_Modal", new BootstrapModel { ID = "myModal", AreaLabeledId = "myModal-label", Size = ModalSize.Large })
+

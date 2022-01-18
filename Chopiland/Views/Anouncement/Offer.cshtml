@@ -1,0 +1,67 @@
+﻿@model AnouncementViewModel
+@using Chopiland.Models
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container">
+    <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+        <form asp-action="Offer" role="form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <input asp-for="Id" />
+                <div class="col-md-6 col-lg-5 p-b-3">
+                    <div class="p-r-50 p-t-5 p-lr-0-lg">
+                        <div class="block2-pic hov-img0">
+                            <img src="@Url.Content(Model.ImageUrl)" alt="IMG-PRODUCT">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-7 p-b-30">
+                    <div class="p-r-50 p-t-5 p-lr-0-lg">
+                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">
+                            @Model.AnouncementName
+                        </h4>
+
+                        <span class="mtext-106 cl2">
+                            $@Model.Price
+                        </span>
+
+                        <div class="form-group">
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-204 respon6-next">
+                                    <label asp-for="OfferPrice" class="control-label mtext-105 cl2 js-name-detail p-b-14 "></label>
+                                    <div class="bor8 bg0">
+                                        <input asp-for="OfferPrice" class="form-control" />
+                                        <span asp-validation-for="OfferPrice" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-204 respon6-next">
+                                    <label asp-for="ExpirationDate" class="control-label mtext-105 cl2 js-name-detail p-b-14"></label>
+                                    <div class="bor8 bg0">
+                                        <input asp-for="ExpirationDate" type="date" class="form-control" />
+                                        <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                        <div class="form-group">
+                            <div class="flex-w flex-c-m">
+                                <input type="submit" value="Offer" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04" />
+                                <a asp-area="" asp-controller="Anouncement" asp-action="Index" class="flex-c-m btn btn-danger stext-101 cl0 size-101  bor1 hov-btn1 p-lr-15 trans-04">Back to List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

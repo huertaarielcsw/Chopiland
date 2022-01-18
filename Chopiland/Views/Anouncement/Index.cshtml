@@ -1,0 +1,135 @@
+﻿@model AnouncementProductCategoryViewModel
+@using Chopiland.Code
+@using Data
+@using Services
+@inject IAnouncementService anouncementService
+@{
+    ViewData["Title"] = "Anouncements";
+}
+
+<div class="bg0 m-t-23 p-b-140">
+    <div class="container">
+        <form asp-controller="Anouncement" asp-action="Index" method="get">
+            <div class="row">
+                <div class="flex-w flex-l-m p-b-10 col-md-4 col-lg-4">
+                    <div class="size-204 respon6-next">
+                        <div class="rs1-select2 bor8 bg0">
+                            <select asp-for="CategoryId" asp-items=Model.Categories class="js-select2">
+                                <option value="">All Categories</option>
+                            </select>
+                            <div class="dropDownSelect2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-w flex-l-m p-b-10 col-md-4 col-lg-4">
+                    <div class="size-204 respon6-next">
+                        <div class="rs1-select2 bor8 bg0">
+                            <select asp-for="ProductID" asp-items=Model.Products class="js-select2">
+                                <option value="">All Products</option>
+                            </select>
+                            <div class="dropDownSelect2"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-w flex-c-m m-tb-10 col-md-3 col-lg-3">
+                    <button class="flex-c-m stext-106 cl6 size-104 bor4 hov-btn3 trans-04 m-r-8 m-tb-4" type="submit">
+                        <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+                        Filter
+                    </button>
+
+                    <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
+                        <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+                        <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                        Search
+                    </div>
+                </div>
+                <div class="flex-w flex-l-m m-tb-10 col-md-2 col-lg-1">
+                    <button class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4" asp-area="" asp-controller="Anouncement" asp-action="AddAnouncement">
+                        <i class="icon-plus cl2 m-r-6 fs-15 trans-04 fa fa-plus-circle"></i>
+                        Create
+                    </button>
+                </div>
+                <div class="dis-none panel-search w-full p-t-10 p-b-15">
+                    <div class="bor8 dis-flex p-l-15">
+                        <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+                            <i class="zmdi zmdi-search"></i>
+                        </button>
+                        <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" asp-for="SearchString" placeholder="Search">
+                    </div>
+                </div>
+            </div>            
+        </form>
+        <div class="row isotope-grid">
+            @foreach (var item in Model.Anuncios)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+                    <!-- Block2 -->
+                    <div class="block2">
+                        @if (item.IsOffer)
+                        {
+                            <div class="block2-pic hov-img0 label-new" data-label="Offer">
+                                <img src="@Url.Content(item.ImageUrl)" alt="IMG-PRODUCT">
+
+                                <a asp-action="DetailsAnouncement" asp-route-id="@item.Id" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+                                    Details
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="block2-pic hov-img0">
+                                <img src="@Url.Content(item.ImageUrl)" alt="IMG-PRODUCT">
+
+                                <a asp-action="DetailsAnouncement" asp-route-id="@item.Id" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+                                    Details
+                                </a>
+                            </div>
+                        }
+                        
+                        <div class="block2-txt flex-w flex-t p-t-14">
+                            <div class="block2-txt-child1 flex-col-l ">
+                                <a asp-action="DetailsAnouncement" asp-route-id="@item.Id" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                    @Html.DisplayFor(modelItem => item.AnouncementName)
+                                </a>
+
+                                @if (item.IsOffer)
+                                {
+                                    <span class="stext-105 cl3">
+                                        <del>$@Html.DisplayFor(modelItem => item.Price)</del> $@Html.DisplayFor(modelItem => item.OfferPrice)
+                                    </span>                         
+                                }
+                                else
+                                {
+                                    <span class="stext-105 cl3">
+                                        $@Html.DisplayFor(modelItem => item.Price)
+                                    </span>
+                                }                                
+                            </div>
+
+                            @if(await AuthorizationService.AuthorizeAsync(User,anouncementService.GetAnouncement(item.Id), Operations.Update))
+                               {
+                                    <div class="block2-txt-child2 flex-r p-t-3">
+                                        <a asp-area="" asp-controller="Anouncement" asp-action="Offer" asp-route-id="@item.Id" class="dis-block pos-relative">
+                                            <i class="icon-tag"></i>
+                                        </a>
+                                        <a asp-area="" asp-controller="Anouncement" asp-action="EditAnouncement" asp-route-id="@item.Id" class="dis-block pos-relative">
+                                            <i class="icon-pencil"></i>
+                                        </a>
+                                        <a id="deleteAnouncement" data-toggle="modal" asp-action="DeleteAnouncement" asp-route-id="@item.Id" data-target="#myModal" class="dis-block pos-relative">
+                                            <i class="icon-trash"></i>
+                                        </a>
+                                    </div>
+                               }
+                        </div>
+                    </div>
+                </div>
+            }            
+        </div>
+    </div>
+</div>
+@Html.Partial("_Modal", new BootstrapModel { ID = "myModal", AreaLabeledId = "myModal-label", Size = ModalSize.Large })
+
+@section scripts
+{
+    <script src="~/js/anouncement-index.js" asp-append-version="true"></script>
+}

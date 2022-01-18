@@ -1,0 +1,73 @@
+﻿@model BiddingViewModel
+@using Chopiland.Models
+@{
+    ViewData["Title"] = "Bid";
+}
+
+<head>
+    <link rel="stylesheet" href="~/templates/store/css/icomoon.css">
+    <link rel="stylesheet" href="~/templates/store/css/style.css">
+</head>
+
+<div class="container">
+    <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+        <form asp-action="Bid" role="form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="colorlib-shop col-md-10 col-md-offset-4  text-center">
+                <span class="icon"><i class="icon-hammer2"></i></span>
+                <h3>Bidding List</h3>
+            </div>
+            <div class="row">
+                <input asp-for="Id" />
+                <div class="col-md-6 col-lg-7 p-b-30 ">
+                    <div class="p-r-50 p-t-5 p-lr-0-lg text-center">
+                        @foreach (var item in Model.BidsUsers)
+                        {
+                            <h4>@item.User : $@item.Bid</h4>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-5 p-b-3">
+                    <div class="p-r-50 p-t-5 p-lr-0-lg">
+                        <div class="form-group">
+                            <label asp-for="NewBid" class="control-label mtext-105 cl2 js-name-detail p-b-14 "></label>
+                            <div class="bor8 bg0">
+                                @if (Model.BidsUsers.Count > 0)
+                                {
+                                    <input asp-for="NewBid" class="form-control" value="@Model.LastBid" />                                   
+                                    <input type="hidden" asp-for="LastBid" value="@Model.LastBid" />
+                                }
+                                else
+                                {
+                                    <input asp-for="NewBid" class="form-control" value="@Model.LastBid" />
+                                    <input asp-for="LastBid" type="hidden" value="@Model.LastBid" />
+                                }
+                                <span asp-validation-for="NewBid" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="flex-w flex-c-m">
+                                @if (Model.BidsUsers.Count > 0)
+                                {
+                                    if (Model.BidsUsers.First().User != User.Identity.Name)
+                                    {
+                                        <input type="submit" value="Bid" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04" />
+                                    }
+                                }
+                                else
+                                {
+                                    <input type="submit" value="Bid" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04" />
+                                }
+                                <a asp-area="" asp-controller="Auction" asp-action="Index" class="flex-c-m btn btn-danger stext-101 cl0 size-101  bor1 hov-btn1 p-lr-15 trans-04">Back to List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

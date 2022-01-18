@@ -1,0 +1,84 @@
+﻿@model ProductCategoriesViewModel
+@using Chopiland.Code
+@using Data
+@using Services
+@inject IProductService productService
+@{
+    ViewData["Title"] = "Products";
+}
+
+<form asp-controller="Product" asp-action="Index" method="get">
+    <div class="row">
+        <div class="flex-w flex-r-m p-b-10 col-md-6 col-lg-5">
+            <div class="size-203 flex-c-m respon6">
+                Categories
+            </div>
+            <div class="size-204 respon6-next">
+                <div class="rs1-select2 bor8 bg0">
+                    <select asp-for="ProductCategory" asp-items=Model.Categories class="js-select2">
+                        <option value="">All</option>
+                    </select>
+                    <div class="dropDownSelect2"></div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-w flex-c-m m-tb-10 col-md-3 col-lg-3">
+            <button class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4" type="submit">
+                <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+                Filter
+            </button>
+            <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
+                <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+                <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                Search
+            </div>
+        </div>
+        <div class="flex-w flex-l-m m-tb-10 col-md-2 col-lg-1">
+            <button class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4" asp-area="" asp-controller="Product" asp-action="AddProduct">
+                <i class="icon-plus cl2 m-r-6 fs-15 trans-04 fa fa-plus-circle"></i>
+                Create
+            </button>
+        </div>
+    </div>
+    <div class="dis-none panel-search w-full p-t-10 p-b-15">
+        <div class="bor8 dis-flex p-l-15">
+            <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+                <i class="zmdi zmdi-search"></i>
+            </button>
+            <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" asp-for="SearchString" placeholder="Search">
+        </div>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+                <td>@Html.DisplayFor(modelItem => item.CategoryName)</td>
+                <td>
+                    @if (await AuthorizationService.AuthorizeAsync(User, productService.GetProduct(item.Id), Operations.Update))
+                    {
+
+                        <a asp-area="" asp-controller="Product" asp-action="EditProduct" asp asp-route-id="@item.Id" class="btn btn-info">
+                            <i class="icon-pencil"></i> Edit
+                        </a>
+                        <a id="deleteProductModal" data-toggle="modal" asp-action="DeleteProduct" asp-route-id="@item.Id" data-target="#myModal" class="btn btn-danger">
+                            <i class="icon-trash"></i> Delete
+                        </a>
+
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_Modal", new BootstrapModel { ID = "myModal", AreaLabeledId = "myModal-label", Size = ModalSize.Large })

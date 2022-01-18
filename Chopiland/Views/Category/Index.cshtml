@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CategoryViewModel>
+@using Chopiland.Code
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Major Category</th>
+            <th>
+                <a class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4" asp-controller="Category" asp-action="AddCategory">
+                    <i class="icon-plus cl2 m-r-6 fs-15 trans-04 fa fa-plus-circle"></i>
+                    Create
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.MajorCategory)</td>
+                <td>
+                    <a asp-area="" asp-controller="Category" asp-action="EditCategory" class="btn btn-info" asp-route-id="@item.Id">
+                        <i class="icon-pencil"></i>  Edit
+                    </a>
+                    <a id="deleteCategoryModal" data-toggle="modal" asp-action="DeleteCategory" asp-route-id="@item.Id" data-target="#myModal" class="btn btn-danger">
+                        <i class="icon-trash"></i>  Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_Modal", new BootstrapModel { ID = "myModal", AreaLabeledId = "myModal-label", Size = ModalSize.Large })

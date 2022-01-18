@@ -1,0 +1,102 @@
+﻿@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@using Data
+@model LoginViewModel
+@inject SignInManager<User> SignInManager
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<head>
+
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/templates/Login_v18/css/main.css">
+    <!--===============================================================================================-->
+</head>
+
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="login100-form validate-form">
+                <span class="login100-form-title p-b-43">
+                    Login to continue
+                </span>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group wrap-input100 validate-input">
+                    <input asp-for="UserName" class="input100" />
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">UserName</span>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group wrap-input100 validate-input">
+                    <input asp-for="Password" class="input100" />
+                    <span class="focus-input100"></span>
+                    <span class="label-input100">Password</span>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group flex-sb-m w-full p-t-3 p-b-32">
+                    <div class="contact100-form-checkbox">
+                        <input  asp-for="RememberMe"  class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                        <label class="label-checkbox100" for="ckb1">
+                            Remember me
+                        </label>
+                    </div>
+                    <div>
+                        <a asp-action="ForgotPassword" class="txt1">
+                            Forgot Password?
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group container-login100-form-btn">
+                    <button class="login100-form-btn">
+                        Log in
+                    </button>
+                </div>
+
+                <div class="text-center p-t-46 p-b-20">
+                    <span class="txt2">
+                        or sign up using
+                    </span>
+                </div>
+
+                <div class="login100-form-social flex-c-m">
+                    <a href="#" class="login100-form-social-item flex-c-m bg1 m-r-5">
+                        <i class="fa fa-facebook-f" aria-hidden="true"></i>
+                    </a>
+
+                    <a href="#" class="login100-form-social-item flex-c-m bg2 m-r-5">
+                        <i class="fa fa-twitter" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </form>
+
+            <div class="login100-more" style="background-image: url('http://localhost:57624/templates/Login_v18/images/bg-01.jpg');">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_ScriptsLogin"); }
+}

@@ -1,0 +1,9 @@
+﻿@using Chopiland.Models
+
+<form asp-action="DeleteAuction" role="form">
+    @Html.Partial("_ModalHeader", new ModalHeader { Heading = "Delete Auction" })
+    <div class="modal-body">
+        <p>Do you really want to delete @Model? This process cannot be undone.</p>
+    </div>
+    @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "Delete" })
+</form>
